@@ -3,7 +3,7 @@
  * File Name:NumberAsStringSerializer.java 
  * Package Name:cn.liuyiyou.common.utils 
  * Date:2017年7月25日下午4:46:18 
- * Copyright (c) 2017, www.daojia.com All Rights Reserved. 
+ * Copyright (c) 2017, liuyiyou.cn All Rights Reserved. 
  * 
  */ 
 package cn.liuyiyou.common.utils;
