@@ -1,4 +1,4 @@
-package cn.liuyiyou.common.utils;
+package cn.liuyiyou.utils.json;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +42,14 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapLikeType;
 
+import cn.liuyiyou.utils.serializer.BooleanDeserializer;
+import cn.liuyiyou.utils.serializer.DateDeserializer;
+import cn.liuyiyou.utils.serializer.DecimalSerializer;
+
 /**
  * 
- * 名称: JsonUtil <br/> 
+ * 名称: JsonUtil <br/>
+ * 
  * @author liuyiyou.cn
  * @date 2017年7月25日
  * @version 6.0.0
@@ -52,21 +57,22 @@ import com.fasterxml.jackson.databind.type.MapLikeType;
 @SuppressWarnings("unchecked")
 public final class JsonUtil {
 
-//	private static final DaojiaAnnotationIntrospector ANNOTATION_INTROSPECTOR = new DaojiaAnnotationIntrospector();
+	// private static final DaojiaAnnotationIntrospector ANNOTATION_INTROSPECTOR
+	// = new DaojiaAnnotationIntrospector();
 
 	/** 将日期对象转换为 JSON 格式字符串时的默认日期格式： {@value} */
 	public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	
-    private static final ObjectMapper MAPPER;
 
-    private static final ObjectMapper SENSITIVE_DATA_MAPPER;
+	private static final ObjectMapper MAPPER;
 
-    static {
-        MAPPER = generateMapper();
+	private static final ObjectMapper SENSITIVE_DATA_MAPPER;
 
-        SENSITIVE_DATA_MAPPER = generateMapper();
-       // SENSITIVE_DATA_MAPPER.setAnnotationIntrospector(ANNOTATION_INTROSPECTOR);
-    }
+	static {
+		MAPPER = generateMapper();
+
+		SENSITIVE_DATA_MAPPER = generateMapper();
+		// SENSITIVE_DATA_MAPPER.setAnnotationIntrospector(ANNOTATION_INTROSPECTOR);
+	}
 
 	/**
 	 * 创建 ObjectMapper 对象
@@ -95,26 +101,26 @@ public final class JsonUtil {
 		return generateMapper(incl, DEFAULT_DATETIME_FORMAT);
 	}
 
-    /**
-     * 创建 ObjectMapper 对象
-     * 
-     * @param incl
-     *            传入一个枚举值，设置序列化为 json 的 JavaBean 属性的类型：
-     *            <ul>
-     *            <li>{@link Include#ALWAYS} - 全部列入</li>
-     *            <li>{@link Include#NON_DEFAULT} - 字段值和其默认值相同的时候不会列入</li>
-     *            <li>{@link Include#NON_EMPTY} - 字段值为 null、"" 或 length、size 为 0
-     *            的时候不会列入</li>
-     *            <li>{@link Include#NON_NULL} - 字段值为 null 时候不会列入</li>
-     *            </ul>
-     * @param dateFormat
-     *            日期字符串的格式
-     * @return 新创建的 ObjectMapper 实例
-     */
-    public static ObjectMapper generateMapper(Include incl, String dateFormat) {
-        return generateMapper(incl, dateFormat, true);
-    }
-    
+	/**
+	 * 创建 ObjectMapper 对象
+	 * 
+	 * @param incl
+	 *            传入一个枚举值，设置序列化为 json 的 JavaBean 属性的类型：
+	 *            <ul>
+	 *            <li>{@link Include#ALWAYS} - 全部列入</li>
+	 *            <li>{@link Include#NON_DEFAULT} - 字段值和其默认值相同的时候不会列入</li>
+	 *            <li>{@link Include#NON_EMPTY} - 字段值为 null、"" 或 length、size 为 0
+	 *            的时候不会列入</li>
+	 *            <li>{@link Include#NON_NULL} - 字段值为 null 时候不会列入</li>
+	 *            </ul>
+	 * @param dateFormat
+	 *            日期字符串的格式
+	 * @return 新创建的 ObjectMapper 实例
+	 */
+	public static ObjectMapper generateMapper(Include incl, String dateFormat) {
+		return generateMapper(incl, dateFormat, true);
+	}
+
 	/**
 	 * 创建 ObjectMapper 对象
 	 * 
@@ -138,8 +144,8 @@ public final class JsonUtil {
 		 * JsonFactory jsonFactory = new JsonFactory();
 		 * jsonFactory.enable(Feature.ALLOW_COMMENTS);
 		 * jsonFactory.enable(Feature.ALLOW_SINGLE_QUOTES);
-		 * jsonFactory.enable(Feature.ALLOW_UNQUOTED_FIELD_NAMES);
-		 * ObjectMapper objectMapper = new ObjectMapper(jsonFactory);
+		 * jsonFactory.enable(Feature.ALLOW_UNQUOTED_FIELD_NAMES); ObjectMapper
+		 * objectMapper = new ObjectMapper(jsonFactory);
 		 */
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -160,23 +166,24 @@ public final class JsonUtil {
 		objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
 		objectMapper.configure(Feature.WRITE_BIGDECIMAL_AS_PLAIN, true);
 
-		if(incl != null) { // 设置输出时包含属性的风格
-		    objectMapper.setSerializationInclusion(incl);
+		if (incl != null) { // 设置输出时包含属性的风格
+			objectMapper.setSerializationInclusion(incl);
 		}
-		if(dateFormat != null) { // 设置默认日期格式
-		    objectMapper.setDateFormat(new SimpleDateFormat(dateFormat));
+		if (dateFormat != null) { // 设置默认日期格式
+			objectMapper.setDateFormat(new SimpleDateFormat(dateFormat));
 		}
 		objectMapper.setLocale(Locale.CHINA);
 		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-		// objectMapper.setFilters(new SimpleFilterProvider().setFailOnUnknownId(false));
+		// objectMapper.setFilters(new
+		// SimpleFilterProvider().setFailOnUnknownId(false));
 
 		SimpleModule module = new SimpleModule("DaojiaModule");
 		module.addSerializer(BigDecimal.class, new DecimalSerializer())
 				.addDeserializer(Boolean.class, new BooleanDeserializer())
 				.addDeserializer(Date.class, new DateDeserializer());
-//		if(serializerEnumAsObject) {
-//		    module.addSerializer(Enum.class, new DaojiaEnumSerializer());
-//		}
+		// if(serializerEnumAsObject) {
+		// module.addSerializer(Enum.class, new DaojiaEnumSerializer());
+		// }
 		objectMapper.registerModule(module);
 		return objectMapper;
 	}
@@ -281,53 +288,59 @@ public final class JsonUtil {
 	public static String object2Json(Object obj) {
 		return object2Json(obj, false);
 	}
-	
+
 	/**
 	 * 将 Java 对象转换成 JSON 字符串
 	 * 
-	 * @param obj 要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
-	 * @param includeSensitiveData 是否含包手机号、身份证号等敏感数据
+	 * @param obj
+	 *            要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
+	 * @param includeSensitiveData
+	 *            是否含包手机号、身份证号等敏感数据
 	 * @return 转换后的 JSON 字符串
 	 */
 	public static String object2Json(Object obj, boolean includeSensitiveData) {
-	    return object2Json(obj, (Include) null, includeSensitiveData);
+		return object2Json(obj, (Include) null, includeSensitiveData);
 	}
-	
+
 	/**
 	 * 将 Java 对象转换成 JSON 字符串
 	 * 
-	 * @param obj 要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
-	 * @param incl 需要转换为 JSON 字符串的字段包含规则枚举
+	 * @param obj
+	 *            要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
+	 * @param incl
+	 *            需要转换为 JSON 字符串的字段包含规则枚举
 	 * @return 转换后的 JSON 字符串
 	 */
 	public static String object2Json(Object obj, Include incl) {
-	    return object2Json(obj, incl, false);
+		return object2Json(obj, incl, false);
 	}
-	
-	
+
 	/**
 	 * 将 Java 对象转换成 JSON 字符串
 	 * 
-	 * @param obj 要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
-     * @param incl 需要转换为 JSON 字符串的字段包含规则枚举
-     * @param includeSensitiveData 是否含包手机号、身份证号等敏感数据
+	 * @param obj
+	 *            要转换成 JSON 字符串的 Java 对象，可以是一个 JavaBea、数组、List、Map 等任何非 null 对象
+	 * @param incl
+	 *            需要转换为 JSON 字符串的字段包含规则枚举
+	 * @param includeSensitiveData
+	 *            是否含包手机号、身份证号等敏感数据
 	 * @return 转换后的 JSON 字符串
 	 */
 	public static String object2Json(Object obj, Include incl, boolean includeSensitiveData) {
-	    ObjectMapper om = null;
-	    try {
-	        if(incl == null) {
-	            om = includeSensitiveData ? SENSITIVE_DATA_MAPPER : MAPPER;
-	        } else {
-	            om = generateMapper(incl);
-	            if(includeSensitiveData) {
-	               // om.setAnnotationIntrospector(ANNOTATION_INTROSPECTOR);
-	            }
-	        }
-	        return om.writeValueAsString(obj);
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("将 " + obj + " 转换成 JSON 字符串失败。", e);
-	    }
+		ObjectMapper om = null;
+		try {
+			if (incl == null) {
+				om = includeSensitiveData ? SENSITIVE_DATA_MAPPER : MAPPER;
+			} else {
+				om = generateMapper(incl);
+				if (includeSensitiveData) {
+					// om.setAnnotationIntrospector(ANNOTATION_INTROSPECTOR);
+				}
+			}
+			return om.writeValueAsString(obj);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("将 " + obj + " 转换成 JSON 字符串失败。", e);
+		}
 	}
 
 	/**
@@ -740,14 +753,14 @@ public final class JsonUtil {
 	}
 
 	private static ObjectWriter getObjectWriter(Class<?> clazz, String[] properties, boolean exclude) {
-	    if(clazz.isArray()) {
-	        clazz = clazz.getComponentType();
-	    } else if (Collection.class.isAssignableFrom(clazz)) {
-	        throw new UnsupportedOperationException("不支持集合类型");
-	    } else if (Map.class.isAssignableFrom(clazz)) {
-	        throw new UnsupportedOperationException("不支持 Map 类型");
-        }
-	    
+		if (clazz.isArray()) {
+			clazz = clazz.getComponentType();
+		} else if (Collection.class.isAssignableFrom(clazz)) {
+			throw new UnsupportedOperationException("不支持集合类型");
+		} else if (Map.class.isAssignableFrom(clazz)) {
+			throw new UnsupportedOperationException("不支持 Map 类型");
+		}
+
 		// 如果是需要排除指定属性，且需要排除的属性列表为空，则直接返回默认的 ObjectWriter
 		if (exclude && ArrayUtils.isEmpty(properties)) {
 			return MAPPER.writer();

@@ -6,7 +6,7 @@
  * Copyright (c) 2017, liuyiyou.cn All Rights Reserved. 
  * 
  */ 
-package cn.liuyiyou.common.utils;
+package cn.liuyiyou.utils.serializer;
 
 import java.io.IOException;
 import java.math.BigDecimal;
