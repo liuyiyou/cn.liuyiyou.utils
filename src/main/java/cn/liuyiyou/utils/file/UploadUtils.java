@@ -39,9 +39,6 @@ public class UploadUtils {
             String str = readerFile(file);
             String[] strs = str.split("<img");
             for (int i = 1; i < strs.length; i++) {
-//				strs[i].toString().indexOf("title")
-//				strs[i].substring(0,strs[i].toString().indexOf("title")).lastIndexOf("/")
-                //(strs[i].substring(0,strs[i].toString().indexOf("title")).length())-2));
                 try {
                     if (i == strs.length - 1) {
                         sb.append(strs[i].substring(0, strs[i].toString().indexOf("title")).substring(strs[i].substring(0, strs[i].toString().indexOf("title")).lastIndexOf("/") + 1,
@@ -129,7 +126,6 @@ public class UploadUtils {
      */
     public static void uploadFile(String uploadUrl, String filePath) throws Exception {
         String boundary = "******";
-
         HttpURLConnection hc = null;  //http连接器
         ByteArrayOutputStream bos = null;//byte输出流，用来读取服务器返回的信息   
         InputStream is = null;//输入流，用来读取服务器返回的信息  

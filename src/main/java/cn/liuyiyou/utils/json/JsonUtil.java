@@ -57,8 +57,6 @@ import cn.liuyiyou.utils.serializer.DecimalSerializer;
 @SuppressWarnings("unchecked")
 public final class JsonUtil {
 
-	// private static final DaojiaAnnotationIntrospector ANNOTATION_INTROSPECTOR
-	// = new DaojiaAnnotationIntrospector();
 
 	/** 将日期对象转换为 JSON 格式字符串时的默认日期格式： {@value} */
 	public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -69,9 +67,7 @@ public final class JsonUtil {
 
 	static {
 		MAPPER = generateMapper();
-
 		SENSITIVE_DATA_MAPPER = generateMapper();
-		// SENSITIVE_DATA_MAPPER.setAnnotationIntrospector(ANNOTATION_INTROSPECTOR);
 	}
 
 	/**

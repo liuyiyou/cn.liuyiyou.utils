@@ -62,7 +62,6 @@ public class StringUtil {
      * @param pad    补齐不足部分使用字符串
      * @param length 最终要生成的字符串长度
      * @return
-     * @author shenxufei
      */
     public static String lpad(String val, String pad, Integer length) {
         if (null != val && val.length() >= length) {

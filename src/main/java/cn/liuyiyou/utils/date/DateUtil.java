@@ -15,25 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @Title: DateUtil.java
- * @Package com.bj58.daojia.djpay.util
- * @Description: 日期格式转换工具类
- * @author cuilingfeng
- * @date 2015-8-4 上午11:18:12
- * @version V1.0
- * @Copyright: 2015 www.daojia.com Inc. All rights reserved.
+ * 日期工具类
  */
 public class DateUtil {
 	private static final Logger logger = LoggerFactory.getLogger(DateUtil.class);
-	// 日期格式常量
-	private static final String SDF_COMMON = "yyyy-MM-dd HH:mm:ss";
-	private static final String SDF_SHORT = "yyyy-MM-dd";
-	private static final String SDF_STATISTICS = "yyyyMMdd";
-	private static final String SDF_MONTH_STATISTICS = "yyyyMM";
-	private static final String SDF_MONTH_YEAR = "yyyy-MM";
-	private static final String SDF_ORDER = "yyyyMMddHHmmss";
-	// 百度SEM V4版本日期格式要求:
-	private static final String SDF_BAIDU_SEM = "yyyy-MM-ddTHH:mm:ss.SSS";
+	private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String YYYY_MMDD_HHMMSS = "yyyyMMddHHmmss";
+	private static final String YYYY_MM_DD = "yyyy-MM-dd";
+	private static final String YYYY_MMDD = "yyyyMMdd";
 
 	/**
 	 * 格式常用的日期格式
@@ -44,7 +33,7 @@ public class DateUtil {
 	 */
 	public static Date parseDate(String dt) throws ParseException {
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_COMMON);
+			SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD_HHMMSS);
 			return df.parse(dt);
 		} catch (ParseException pe) {
 			logger.error(pe.getMessage(), pe);
@@ -56,7 +45,7 @@ public class DateUtil {
 		if (StringUtil.isEmptyString(dt))
 			return null;
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+			SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 			return df.parse(dt);
 		} catch (Exception pe) {
 			logger.error(pe.getMessage(), pe);
@@ -64,29 +53,13 @@ public class DateUtil {
 		}
 	}
 
-	/**
-	 * @Title: parsePayOrderDate
-	 * @Description: 格式化订单日期
-	 * @param dt
-	 * @return
-	 * @throws ParseException
-	 * @since
-	 */
-	public static Date parsePayOrderDate(String dt) throws ParseException {
-		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_ORDER);
-			return df.parse(dt);
-		} catch (ParseException pe) {
-			logger.error(pe.getMessage(), pe);
-			throw pe;
-		}
-	}
+
 
 	public static Date parseStatisticsDate(String dt) throws Exception {
 		if (StringUtil.isEmptyString(dt))
 			return null;
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
+			SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 			return df.parse(dt);
 		} catch (Exception pe) {
 			logger.error(pe.getMessage(), pe);
@@ -97,21 +70,14 @@ public class DateUtil {
 	public static String formatDate(Date dt) {
 		if (dt == null)
 			return "0000-00-00 00:00:00";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_COMMON);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD_HHMMSS);
 		return df.format(dt);
 	}
 
 	public static String formatStatisticsDate(Date dt) {
 		if (dt == null)
 			return "00000000";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
-		return df.format(dt);
-	}
-
-	public static String formatBaiDuDate(Date dt) {
-		if (dt == null)
-			return "0000-00-00T00:00:00.000";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_BAIDU_SEM);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 		return df.format(dt);
 	}
 
@@ -122,7 +88,7 @@ public class DateUtil {
 	 */
 	public static String formatBaiDuDefaultStartDate() {
 		Date yesterdayDate = getYesterday();
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		String date = df.format(yesterdayDate);
 		date += "T00:00:00.000";
 
@@ -133,30 +99,14 @@ public class DateUtil {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.HOUR_OF_DAY, -1);
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		String result = df.format(c.getTime());
 		return result + "T00:00:00.000";
 	}
 
 	public static String formatBaiDuStartDate(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		return df.format(date) + "T00:00:00.000";
-	}
-
-	/**
-	 * 生成baidu报表格式的默认结束统计日期 时间定义有问题： 要和开始时间传一样的，才能返回刚好一整天的数据!!!
-	 * 
-	 * @return
-	 */
-	public static String formatBaiDuDefaultEndDate() {
-		// Date yesterdayDate = getYesterday();
-		// SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
-		// String date = df.format(yesterdayDate);
-		// date += "T23:59:59.000";
-		//
-		// return date;
-
-		return formatBaiDuDefaultStartDate();
 	}
 
 	/**
@@ -165,7 +115,7 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String formatYesterdayStatisticsDate() {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 		Calendar cal = Calendar.getInstance();
 		// 日期减一
 		cal.add(Calendar.DATE, -1);
@@ -174,7 +124,7 @@ public class DateUtil {
 	}
 
 	public static String formatAddStatisticsDate(String date, int days) throws Exception {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(parseStatisticsDate(date));
 		// 日期减一
@@ -190,7 +140,7 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String formatDaysAgoStatisticsDate(int days) {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 		Calendar cal = Calendar.getInstance();
 		// 日期减days
 		cal.add(Calendar.DATE, -days);
@@ -204,7 +154,7 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String formatYesterdayStatisticsDateCommon() {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		Calendar cal = Calendar.getInstance();
 		// 日期减一
 		cal.add(Calendar.DATE, -1);
@@ -293,21 +243,7 @@ public class DateUtil {
 	public static String formatShortDate(Date dt) {
 		if (dt == null)
 			return "0000-00-00";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
-		return df.format(dt);
-	}
-
-	/**
-	 * @Title: formatOrderDate
-	 * @Description: 订单日期格式化
-	 * @param dt
-	 * @return
-	 * @since
-	 */
-	public static String formatPayOrderDate(Date dt) {
-		if (dt == null)
-			return "00000000000000";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_ORDER);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		return df.format(dt);
 	}
 
@@ -324,31 +260,6 @@ public class DateUtil {
 		return df.format(dt);
 	}
 
-	/**
-	 * 格式化成当月的第一天
-	 * 
-	 * @param dt
-	 * @return
-	 */
-	public static String formatDate2StartYearMonth(Date dt) {
-		if (dt == null)
-			return "0000-00-00";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_MONTH_YEAR);
-		return df.format(dt) + "-01";
-	}
-
-	/**
-	 * 格式化成当月的最后一天(不准确的)
-	 * 
-	 * @param dt
-	 * @return
-	 */
-	public static String formatDate2EndYearMonth(Date dt) {
-		if (dt == null)
-			return "0000-00-00";
-		SimpleDateFormat df = new SimpleDateFormat(SDF_MONTH_YEAR);
-		return df.format(dt) + "-31";
-	}
 
 
 	/**
@@ -361,7 +272,7 @@ public class DateUtil {
 		if (startDate == null || startTime == null)
 			return -1;
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_COMMON);
+			SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD_HHMMSS);
 			return df.parse(new StringBuilder(startDate).append(' ').append(startTime).toString()).getTime();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -379,7 +290,7 @@ public class DateUtil {
 		if (endDate == null || endTime == null)
 			return -1;
 		try {
-			SimpleDateFormat df = new SimpleDateFormat(SDF_COMMON);
+			SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD_HHMMSS);
 			return df.parse(new StringBuilder(endDate).append(' ').append(endTime).toString()).getTime();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -513,13 +424,13 @@ public class DateUtil {
 	}
 
 	public static String formartDayWithShort(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_SHORT);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD);
 		String dateStr = df.format(date);
 		return dateStr;
 	}
 
 	public static String formartDayWithShort2(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat(SDF_STATISTICS);
+		SimpleDateFormat df = new SimpleDateFormat(YYYY_MMDD);
 		String dateStr = df.format(date);
 		return dateStr;
 	}

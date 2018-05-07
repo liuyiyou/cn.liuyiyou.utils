@@ -1,7 +1,5 @@
 package cn.liuyiyou.utils.beans;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
-
 import java.lang.reflect.InvocationTargetException;
 
 /***
@@ -14,11 +12,6 @@ import java.lang.reflect.InvocationTargetException;
  * @date: 2018/1/10
  */
 public abstract class BeanUtils {
-
-
-
-
-
 
     /**
      * 拷贝属性
@@ -53,9 +46,5 @@ public abstract class BeanUtils {
             e.printStackTrace();
         }
     }
-
-//    public static void copyProperties(Object src, Object target){
-//        org.springframework.beans.BeanUtils.copyProperties(src, target);
-//    }
 
 }

@@ -68,18 +68,14 @@ public class HttpClientUtil {
 
     /**
      * 获取httpclient对象，支持https
-     *
      * @return
-     * @author wangqiangliang
      */
     private static CloseableHttpClient getHttpClient() {
         RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
         ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
         registryBuilder.register("http", plainSF);
-        // 指定信任密钥存储对象和连接套接字工厂
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            // 信任任何链接
             TrustStrategy anyTrustStrategy = new TrustAllTrustStrategy();
             SSLContext sslContext = SSLContexts.custom().useTLS().loadTrustMaterial(trustStore, anyTrustStrategy)
                     .build();
@@ -99,8 +95,7 @@ public class HttpClientUtil {
 
     /**
      * 发起 get 请求
-     *
-     * @param url     请求的url
+     * @param url     请求的url，需要http（https）前缀
      * @param queries 请求的参数， 可为 null
      * @return 返回数据
      */
@@ -207,12 +202,6 @@ public class HttpClientUtil {
         }
     }
 
-    /**
-     * 信任任何链接的 https 信任策略
-     * <p>
-     * <b>创建日期：</b> 2016年8月17日
-     * </p>
-     */
     private static final class TrustAllTrustStrategy implements TrustStrategy {
         @Override
         public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
